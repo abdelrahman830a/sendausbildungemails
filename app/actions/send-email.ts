@@ -69,6 +69,8 @@ abdelrahmanzaitoun9@gmail.com`;
         throw new Error(errorMsg);
     }
 
+    const attachmentUrl = 'https://drive.google.com/uc?export=download&id=1EynLgdIm_6H5izNliyuY43nVd07t78gr';
+
     // Send emails
     try {
         await transporter.sendMail({
@@ -77,8 +79,8 @@ abdelrahmanzaitoun9@gmail.com`;
             subject,
             text: message,
             attachments: [{
-                filename: 'Bewerbung_AbdelrahmanZaitoun.pdf', // Updated filename
-                path: attachmentPath,
+                filename: 'Bewerbung_AbdelrahmanZaitoun.pdf',
+                path: attachmentUrl,
             }],
         });
         console.log('Emails sent successfully to:', emails.join(', '));
@@ -88,4 +90,5 @@ abdelrahmanzaitoun9@gmail.com`;
         console.error('Error sending emails:', error);
         throw new Error('Fehler beim Senden der E-Mails');
     }
+
 }
