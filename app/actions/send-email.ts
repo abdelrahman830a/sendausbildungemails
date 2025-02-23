@@ -1,13 +1,10 @@
 'use server';
 
 import nodemailer from 'nodemailer';
-import { readFileSync } from 'fs';
-import path from 'path';
 
 export async function SendAusbildungEmails(emails: string[]) {
     console.log('Starting to send Ausbildung emails');
 
-    // Validate input
     if (!emails || !Array.isArray(emails) || emails.length === 0) {
         const errorMsg = 'Invalid email addresses provided';
         console.error(errorMsg);
@@ -16,7 +13,6 @@ export async function SendAusbildungEmails(emails: string[]) {
 
     console.log(`Email addresses to send: ${emails.join(', ')}`);
 
-    // Create transporter
     let transporter;
     try {
         transporter = nodemailer.createTransport({
@@ -32,7 +28,6 @@ export async function SendAusbildungEmails(emails: string[]) {
         throw new Error('Failed to create transporter');
     }
 
-    // Define email content
     const subject = 'Ausbildung Zum Fachinformatiker';
     const message = `Sehr geehrte Damen und Herren,
 
@@ -48,30 +43,9 @@ Abdelrahman Zaitoun
 +201120195455
 abdelrahmanzaitoun9@gmail.com`;
 
-    // Define attachment path
-    const attachmentPath = path.join(
-        'C:',
-        'Users',
-        'Zaitoun',
-        'Downloads',
-        'all',
-        'Komplett',
-        'Bewerbung_AbdelrahmanZaitoun.pdf'
-    );
-
-    // Verify attachment exists
-    try {
-        readFileSync(attachmentPath);
-        console.log('Attachment found:', attachmentPath);
-    } catch (error) {
-        const errorMsg = 'Bewerbungsunterlagen nicht gefunden';
-        console.error('Attachment error:', error);
-        throw new Error(errorMsg);
-    }
-
+    // Use the Google Drive URL as the attachment path
     const attachmentUrl = 'https://drive.google.com/uc?export=download&id=1EynLgdIm_6H5izNliyuY43nVd07t78gr';
 
-    // Send emails
     try {
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
@@ -90,5 +64,4 @@ abdelrahmanzaitoun9@gmail.com`;
         console.error('Error sending emails:', error);
         throw new Error('Fehler beim Senden der E-Mails');
     }
-
 }
