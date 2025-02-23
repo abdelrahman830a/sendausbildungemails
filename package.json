@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "formidable": "^3.5.2",
+    "fs": "^0.0.1-security",
     "next": "15.1.7",
     "nodemailer": "^6.10.0",
     "react": "^19.0.0",

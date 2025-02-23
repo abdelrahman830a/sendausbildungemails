@@ -37,7 +37,15 @@ export default function AusbildungEmailSender() {
       }
 
       const result = await SendAusbildungEmails(emails);
-      alert(result.message);
+      if (result.success) {
+        alert("E-Mails wurden erfolgreich gesendet.");
+      } else {
+        const failedEmails = result.results
+          .filter((res) => !res.success)
+          .map((res) => res.email)
+          .join(", ");
+        alert(`Fehler beim Senden der folgenden E-Mails: ${failedEmails}`);
+      }
       setEmailInput(""); // Clear input after successful send
     } catch (error) {
       console.error(error);

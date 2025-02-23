@@ -1,5 +1,4 @@
-'use server';
-
+'use server'
 import nodemailer from 'nodemailer';
 
 export async function SendAusbildungEmails(emails: string[]) {
@@ -43,25 +42,30 @@ Abdelrahman Zaitoun
 +201120195455
 abdelrahmanzaitoun9@gmail.com`;
 
-    // Use the Google Drive URL as the attachment path
+    // Use the Google Drive URL for the attachment
     const attachmentUrl = 'https://drive.google.com/uc?export=download&id=1EynLgdIm_6H5izNliyuY43nVd07t78gr';
 
-    try {
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: emails.join(', '),
-            subject,
-            text: message,
-            attachments: [{
-                filename: 'Bewerbung_AbdelrahmanZaitoun.pdf',
-                path: attachmentUrl,
-            }],
-        });
-        console.log('Emails sent successfully to:', emails.join(', '));
-
-        return { success: true, message: 'Emails sent successfully!' };
-    } catch (error) {
-        console.error('Error sending emails:', error);
-        throw new Error('Fehler beim Senden der E-Mails');
+    // Send individual emails for each recipient
+    const results = [];
+    for (const email of emails) {
+        try {
+            await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject,
+                text: message,
+                attachments: [{
+                    filename: 'Bewerbung_AbdelrahmanZaitoun.pdf',
+                    path: attachmentUrl,
+                }],
+            });
+            console.log(`Email sent successfully to: ${email}`);
+            results.push({ email, success: true });
+        } catch (error) {
+            console.error(`Error sending email to ${email}:`, error);
+            results.push({ email, success: false, error });
+        }
     }
+
+    return { success: true, results };
 }
